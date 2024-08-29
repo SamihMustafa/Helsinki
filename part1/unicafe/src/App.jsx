@@ -3,7 +3,7 @@ import { useState } from 'react'
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
 const StatisticsLine = (props) => {
-  return (<p>{props.text} {props.value}</p>)
+  return (<tr><td>{props.text}</td><td>{props.value}</td></tr>)
 }
 
 const Statistics = (props) => {
@@ -11,14 +11,18 @@ const Statistics = (props) => {
     return(<p>No feedback given</p>)
   }
 
-  return(<>
+  return(
+  <table>
+    <tbody>
       <StatisticsLine text="good" value = {props.good} />
       <StatisticsLine text="neutral" value = {props.neutral} />
       <StatisticsLine text="bad" value = {props.bad} />
       <StatisticsLine text="total" value = {props.total} />
       <StatisticsLine text="average" value = {props.average} />
       <StatisticsLine text="positive" value = {`${props.postiveFeedback}%`} />
-  </>)
+      </tbody>
+  </table>
+  )
 }
 
 const App = () => {
@@ -30,14 +34,14 @@ const App = () => {
   const postiveFeedback = good / total * 100
   const average = (good - bad) / total
   return (
-    <div>
+    <>
       <h1>give feedback</h1>
       <Button onClick={() => setGood(good + 1)} text="good" />
       <Button onClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button onClick={() => setBad(bad + 1)} text="bad" />
       <h1>statistics</h1>
       <Statistics good={good} neutral={neutral} bad={bad} total={total} average={average} postiveFeedback={postiveFeedback} />
-    </div>
+    </>
   )
 }
 
