@@ -3,15 +3,18 @@ import { useState } from 'react'
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
 const Statistics = (props) => {
-  <>
-      <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p> 
-      <p>bad {bad}</p>
-      <p>total {total}</p>
-      <p>average {average}</p>
-      <p>postive {postiveFeedback}%</p>
-  </>
+  if(props.total === 0) {
+    return(<p>No feedback given</p>)
+  }
+
+  return(<>
+      <p>good {props.good}</p>
+      <p>neutral {props.neutral}</p> 
+      <p>bad {props.bad}</p>
+      <p>total {props.total}</p>
+      <p>average {props.average}</p>
+      <p>postive {props.postiveFeedback}%</p>
+  </>)
 }
 
 const App = () => {
@@ -28,6 +31,7 @@ const App = () => {
       <Button onClick={() => setGood(good + 1)} text="good" />
       <Button onClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button onClick={() => setBad(bad + 1)} text="bad" />
+      <h1>statistics</h1>
       <Statistics good={good} neutral={neutral} bad={bad} total={total} average={average} postiveFeedback={postiveFeedback} />
     </div>
   )
