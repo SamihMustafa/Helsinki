@@ -1,7 +1,5 @@
 import Course from './compontents/Course'
 
-const Total = ({ sum }) => <p>Number of exercises {sum}</p>
-
 const App = () => {
   const course = {
     id: 1,
@@ -28,7 +26,6 @@ const App = () => {
   return (
     <div>
       <Course course={course} />
-     {/* <Total sum={parts[0].exercises + parts[1].exercises + parts[2].exercises} /> */}
     </div>
   )
 }
