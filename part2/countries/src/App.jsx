@@ -4,11 +4,14 @@ import SearchBar from './components/SearchBar'
 import Countries from './components/Countries'
 import Country from './components/Country'
 
+const api_key = import.meta.env.VITE_WEATHER_API_KEY
+
 const App = () => {
     const [countries, setCountries] = useState([])
     const [filter, setFilter] = useState('')
     const [countriesResults, setCountriesResults] = useState([])
-    const [shownCountry, setShownCountry] = useState(null)
+    const [selectedCountry, setSelectedCountry] = useState(null)
+    const [weather, setWeather] = useState(null)
 
     const getCountries = () => {
         axios
@@ -20,6 +23,27 @@ const App = () => {
     }
     useEffect(getCountries, [])
 
+    const getWeather = () => {
+       if(selectedCountry){
+        const country = selectedCountry
+        const baseUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${country.latlng[0]}&lon=${country.latlng[1]}&appid=${api_key}&units=metric`
+        axios
+          .get(baseUrl)
+          .then(response => {
+            console.log('weather promise fulfilled', response.data)
+            console.log('current country when displaying weather', selectedCountry)
+            if(selectedCountry != null){
+              setWeather(response.data)
+            }else{
+              setWeather(null)
+            }
+          })
+        }else{
+          setWeather(null)
+        }
+    }
+    useEffect(getWeather, [selectedCountry])
+
     const hook = () => {
       console.log(filter)
       const filteredCountries = countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
@@ -27,11 +51,10 @@ const App = () => {
       setCountriesResults(filteredCountries)
       
       if(filteredCountries.length == 1){
-        setShownCountry(filteredCountries[0])
+        setSelectedCountry(filteredCountries[0])
       }else{
-        setShownCountry(null)
+        setSelectedCountry(null)
       }
-
     }
     
     useEffect(hook, [filter])
@@ -45,14 +68,14 @@ const App = () => {
       console.log(name)
       const foundCountry = countries.find(country => country.name.common.toLowerCase().includes(name.toLowerCase()))
       console.log(foundCountry)
-      setShownCountry(foundCountry)
+      setSelectedCountry(foundCountry)
     }
 
     return(
         <div>
             <SearchBar filter={filter} onChange={handleFilterChange} />
             <Countries countries={countriesResults} showCountry={showCountry} />
-            <Country country={shownCountry} />
+            <Country country={selectedCountry} weather={weather} />
         </div>
     )
 

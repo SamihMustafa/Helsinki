@@ -1,4 +1,6 @@
-const Country = ({country}) => {
+import Weather from './Weather'
+
+const Country = ({country, weather}) => {
     console.log('displaying country', country)
     if(country == null){
         return
@@ -14,6 +16,7 @@ const Country = ({country}) => {
                 {Object.values(country.languages).map(language => <li key={language}>{language}</li>)}
             </ul>
             <img src={country.flags.png} alt="flag" />
+            <Weather weather={weather} />
         </div>
     )
 }
