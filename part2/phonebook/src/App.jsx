@@ -73,14 +73,31 @@ const App = () => {
     })
   }
 
+  const deletePerson = (selectedPerson) => {
+    console.log('deleting person with id', selectedPerson.id)
+
+    const isConfirmed = window.confirm(`Delete ${selectedPerson.name}?`);
+
+    if(isConfirmed) {   
+      personService
+      .deletePerson(selectedPerson.id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== selectedPerson.id))
+      })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add a new</h2>
-      <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+      <PersonForm addPerson={addPerson} 
+          newName={newName} handleNameChange={handleNameChange} 
+          newNumber={newNumber} handleNumberChange={handleNumberChange} 
+          />
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} deletePerson={deletePerson} />
     </div>
   )
 }
