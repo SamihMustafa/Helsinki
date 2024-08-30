@@ -3,12 +3,23 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './service/persons'
+import Notification from './components/Notification'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
+
+
+  const setMessage = (message) => {
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+  }
 
   const hook = () => {
     console.log('effect')
@@ -67,6 +78,7 @@ const App = () => {
             setPersons(persons.map(person => person.id !== foundPerson.id ? person : returnedPerson))
             setNewName('')
             setNewNumber('')
+            setMessage(`Updated ${returnedPerson.name}`)
           })
         return
       }else {
@@ -85,6 +97,7 @@ const App = () => {
       setPersons(persons.concat(returnedPerson))
       setNewName('')
       setNewNumber('')
+      setMessage(`Added ${returnedPerson.name}`)
     })
   }
 
@@ -98,6 +111,7 @@ const App = () => {
       .deletePerson(selectedPerson.id)
       .then(() => {
         setPersons(persons.filter(person => person.id !== selectedPerson.id))
+        setMessage(`Deleted ${selectedPerson.name}`)
       })
     }
   }
@@ -105,6 +119,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm addPerson={addPerson} 
