@@ -14,8 +14,8 @@ const App = () => {
   const [notificationMessage, setNotificationMessage] = useState(null)
 
 
-  const setMessage = (message) => {
-    setNotificationMessage(message)
+  const setMessage = (message, type) => {
+    setNotificationMessage({message, type})
     setTimeout(() => {
       setNotificationMessage(null)
     }, 5000)
@@ -78,7 +78,10 @@ const App = () => {
             setPersons(persons.map(person => person.id !== foundPerson.id ? person : returnedPerson))
             setNewName('')
             setNewNumber('')
-            setMessage(`Updated ${returnedPerson.name}`)
+            setMessage(`Updated ${returnedPerson.name}`, 'success')
+          }).catch(error => {
+            setMessage(`Information of ${newName} has already been removed from server`, 'error')
+            setPersons(persons.filter(n => n.id !== foundPerson.id))
           })
         return
       }else {
@@ -97,7 +100,7 @@ const App = () => {
       setPersons(persons.concat(returnedPerson))
       setNewName('')
       setNewNumber('')
-      setMessage(`Added ${returnedPerson.name}`)
+      setMessage(`Added ${returnedPerson.name}`, 'success')
     })
   }
 
@@ -111,7 +114,10 @@ const App = () => {
       .deletePerson(selectedPerson.id)
       .then(() => {
         setPersons(persons.filter(person => person.id !== selectedPerson.id))
-        setMessage(`Deleted ${selectedPerson.name}`)
+        setMessage(`Deleted ${selectedPerson.name}`, 'success')
+      }).catch(error => {
+        setMessage(`Information of ${selectedPerson.name} has already been removed from server`, 'error')
+        setPersons(persons.filter(person => person.id !== selectedPerson.id))
       })
     }
   }
@@ -119,7 +125,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification notification={notificationMessage} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm addPerson={addPerson} 
